@@ -1,0 +1,145 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search...",
+    "filters": "Filters",
+    "reset": "Reset",
+    "apply": "Apply"
+  },
+  "header": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "about": "About Us",
+    "support": "Support",
+    "signIn": "Sign In",
+    "cart": "Cart",
+    "search": "Search products..."
+  },
+  "footer": {
+    "company": "Company",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "careers": "Careers",
+    "support": "Support",
+    "shipping": "Shipping Info",
+    "returns": "Returns",
+    "warranty": "Warranty",
+    "newsletter": "Newsletter",
+    "subscribe": "Subscribe",
+    "rights": "All rights reserved"
+  },
+  "home": {
+    "hero": {
+      "title": "Premium Kitchen Appliances For Modern Living",
+      "subtitle": "Discover our curated collections of high-quality appliances",
+      "shopNow": "Shop Now",
+      "viewCatalog": "View Catalog"
+    },
+    "categories": {
+      "title": "Shop by Category",
+      "subtitle": "Browse our entire selection",
+      "allCategories": "All Categories"
+    },
+    "featured": {
+      "title": "Featured Products",
+      "viewAll": "View All"
+    },
+    "features": {
+      "bestPrices": "Best Prices",
+      "freeDelivery": "Free Delivery",
+      "warranty": "Warranty",
+      "support": "24/7 Support"
+    }
+  },
+  "catalog": {
+    "title": "Product Catalog",
+    "foundProducts": "Found {{count}} products",
+    "hideFilters": "Hide Filters",
+    "showFilters": "Show Filters",
+    "sortBy": "Sort by:",
+    "sort": {
+      "priceLowToHigh": "Price: Low to High",
+      "priceHighToLow": "Price: High to Low",
+      "newest": "Newest First"
+    },
+    "noProducts": "No products found",
+    "tryChanging": "Try changing filters or search query",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "filters": {
+    "title": "Filters",
+    "category": "Category",
+    "allCategories": "All Categories",
+    "price": "Price",
+    "from": "From",
+    "to": "To",
+    "manufacturer": "Manufacturer",
+    "inStockOnly": "In Stock Only",
+    "resetFilters": "Reset Filters",
+    "activeFilters": "Active filters:",
+    "priceRanges": {
+      "under500": "Under 500",
+      "500to1000": "500 - 1000",
+      "1000to2000": "1000 - 2000",
+      "over2000": "Over 2000"
+    }
+  },
+  "product": {
+    "backToCatalog": "Back to Catalog",
+    "addToCart": "Add to Cart",
+    "inStock": "In Stock",
+    "outOfStock": "Out of Stock",
+    "quantity": "Quantity",
+    "description": "Description",
+    "specifications": "Specifications",
+    "model": "Model",
+    "manufacturer": "Manufacturer",
+    "category": "Category",
+    "freeShipping": "Free Shipping",
+    "warranty2years": "2 Year Warranty",
+    "easyReturns": "Easy Returns"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "deliveryAddress": "Delivery Address",
+    "createAccount": "Create Account",
+    "haveAccount": "Already have an account?",
+    "noAccount": "Don't have an account?",
+    "loginSuccess": "Login successful!",
+    "registerSuccess": "Registration successful! Please login."
+  },
+  "dashboard": {
+    "title": "My Dashboard",
+    "myOrders": "My Orders",
+    "profile": "Profile Settings",
+    "cart": "Shopping Cart",
+    "logout": "Logout",
+    "order": "Order",
+    "placedOn": "Placed on",
+    "status": "Status",
+    "noOrders": "You have no orders yet",
+    "startShopping": "Start Shopping",
+    "cartEmpty": "Your cart is empty"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "products": "Products",
+    "orders": "Orders",
+    "users": "Users",
+    "categories": "Categories",
+    "addProduct": "Add Product",
+    "addManager": "Add Manager",
+    "addCategory": "Add Category",
+    "management": "Management"
+  }
+}
