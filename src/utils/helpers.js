@@ -10,11 +10,13 @@ export const extractPageContent = (data) => {
   
   // Якщо це Page об'єкт з Spring Boot
   if (data.content && Array.isArray(data.content)) {
+    console.log('Extracted from Page object:', data.content.length, 'items');
     return data.content;
   }
   
   // Якщо це вже масив
   if (Array.isArray(data)) {
+    console.log('Data is already an array:', data.length, 'items');
     return data;
   }
   

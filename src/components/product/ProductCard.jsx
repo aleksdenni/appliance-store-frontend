@@ -28,8 +28,16 @@ const ProductCard = ({ product }) => {
   };
 
   const handleCardClick = () => {
+    if (!product || !product.id) {
+      console.error('Product or product.id is undefined:', product);
+      return;
+    }
     navigate(`/product/${product.id}`);
   };
+
+  if (!product) {
+    return null;
+  }
 
   return (
     <div

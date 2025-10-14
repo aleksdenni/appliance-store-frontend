@@ -20,8 +20,8 @@ const HomePage = () => {
           productService.getAll({ page: 0, size: 8 }),
           productService.getCategories(),
         ]);
-        setFeaturedProducts(productsData.content || productsData);
-        setCategories(categoriesData.content ||categoriesData);
+        setFeaturedProducts(extractPageContent(productsData));
+        setCategories(extractPageContent(categoriesData));
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
