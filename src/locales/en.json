@@ -35,25 +35,52 @@
   },
   "home": {
     "hero": {
+      "newArrivals": "New Arrivals 2025",
       "title": "Premium Kitchen Appliances For Modern Living",
       "subtitle": "Discover our curated collections of high-quality appliances",
       "shopNow": "Shop Now",
-      "viewCatalog": "View Catalog"
+      "viewCatalog": "View Catalog",
+      "stats": {
+        "products": "Products",
+        "customers": "Happy Customers",
+        "rating": "Rating"
+      }
     },
     "categories": {
       "title": "Shop by Category",
-      "subtitle": "Browse our entire selection",
-      "allCategories": "All Categories"
+      "subtitle": "Browse our full range of home appliances",
+      "allCategories": "All Categories",
+      "items": "items"
     },
     "featured": {
       "title": "Featured Products",
-      "viewAll": "View All"
+      "subtitle": "Top products chosen by our customers",
+      "viewAll": "View All",
+      "showMore": "Show More Products"
     },
     "features": {
-      "bestPrices": "Best Prices",
-      "freeDelivery": "Free Delivery",
-      "warranty": "Warranty",
-      "support": "24/7 Support"
+      "whyUs": "Why Choose Us",
+      "bestPrices":{
+        "title": "Best Prices",
+        "description": "Competitive prices on all products"
+      },
+      "freeDelivery": {
+        "title": "Free Delivery",
+        "description": "Free shipping on orders over $500"
+      },
+      "warranty": {
+        "title": "Warranty",
+        "description": "Up to 2 years warranty"
+      },
+      "support": {
+        "title": "24/7 Support",
+        "description": "We're here to help anytime"
+      }
+    },
+    "cta": {
+      "title": "Ready to Upgrade Your Home?",
+      "subtitle": "Explore our latest collections and find the perfect appliances for your needs.",
+      "button": "Start Shopping Now"
     }
   },
   "catalog": {

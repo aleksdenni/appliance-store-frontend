@@ -5,8 +5,10 @@ import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 import { formatPrice } from '../../utils/helpers';
 import { USER_ROLES } from '../../utils/constants';
+import { useTranslation } from 'react-i18next';
 
 const ProductCard = ({ product }) => {
+  const { t } = useTranslation();
   const [isLiked, setIsLiked] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -84,7 +86,7 @@ const ProductCard = ({ product }) => {
       <div className="p-4">
         {/* Category */}
         <p className="text-sm text-gray-500 mb-1">
-          {product.subCategory?.name || 'Техніка'}
+          {product.category?.name || 'Техніка'}
         </p>
 
         {/* Title */}

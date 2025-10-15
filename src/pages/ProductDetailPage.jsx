@@ -95,7 +95,7 @@ const ProductDetailPage = () => {
           <div>
             {/* Category */}
             <p className="text-sm text-gray-500 mb-2">
-              {product.subCategory?.category?.name} / {product.subCategory?.name}
+              {product.category?.name}
             </p>
 
             {/* Title */}

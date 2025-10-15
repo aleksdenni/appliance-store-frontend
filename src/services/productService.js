@@ -30,4 +30,9 @@ export const productService = {
     const response = await api.get('/categories');
     return response.data;
   },
+
+    async getManufacturers() {
+    const response = await api.get('/manufacturers');
+    return response.data;
+  },
 };

@@ -219,7 +219,7 @@ const ProductsTab = ({ userRole }) => {
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-sm text-gray-600">
-                      {product.subCategory?.name}
+                      {product.category?.name}
                     </span>
                   </td>
                   <td className="px-4 py-3">

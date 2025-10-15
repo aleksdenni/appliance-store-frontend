@@ -5,7 +5,7 @@ import ProductGrid from '../components/product/ProductGrid';
 import ProductFilters from '../components/product/ProductFilters';
 import { productService } from '../services/productService';
 import { useTranslation } from 'react-i18next';
-import { extractPageContent } from '../utils/helpers';
+import { extractPageContent, extractPaginationInfo } from '../utils/helpers';
 
 const CatalogPage = () => {
   const { t } = useTranslation();
@@ -25,7 +25,7 @@ const CatalogPage = () => {
   });
 
   const [filters, setFilters] = useState({
-    categoryId: '',
+    categoryIds: [],
     minPrice: '',
     maxPrice: '',
     manufacturerIds: [],
@@ -59,7 +59,7 @@ const CatalogPage = () => {
         size: pagination.size,
         sort: getSortParam(sortBy),
         search: searchParams.get('search') || '',
-        categoryId: filters.categoryId || searchParams.get('category') || '',
+        categoryId: filters.categoryIds || searchParams.get('category') || '',
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,
         ...(filters.manufacturerIds.length > 0 && {
@@ -88,12 +88,15 @@ const CatalogPage = () => {
       console.log('  Total pages:', data.totalPages);
       console.log('  Products count:', data.content?.length);
 
-      setProducts(data.content || data);
-      setPagination(prev => ({
-        ...prev,
-        totalPages: data.totalPages || 1,
-        totalElements: data.totalElements || (data.content?.length || 0),
-      }));
+      setProducts(extractPageContent(data));
+      const paginationInfo = extractPaginationInfo(data);
+      // Повністю оновлюємо стан пагінації на основі відповіді API
+      setPagination({
+        page: paginationInfo.currentPage,
+        size: paginationInfo.pageSize,
+        totalPages: paginationInfo.totalPages,
+        totalElements: paginationInfo.totalElements,
+      });
     } catch (error) {
       console.error('Failed to load products:', error);
       setProducts([]);
@@ -162,8 +165,8 @@ const CatalogPage = () => {
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded transition ${viewMode === 'grid'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               title="Сітка"
             >
@@ -172,8 +175,8 @@ const CatalogPage = () => {
             <button
               onClick={() => setViewMode('list')}
               className={`p-2 rounded transition ${viewMode === 'list'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-blue-600 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               title="Список"
             >
@@ -231,8 +234,8 @@ const CatalogPage = () => {
                       key={pageNum}
                       onClick={() => handlePageChange(pageNum)}
                       className={`w-10 h-10 rounded-lg transition ${pagination.page === pageNum
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-200 hover:bg-gray-300'
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-200 hover:bg-gray-300'
                         }`}
                     >
                       {pageNum + 1}

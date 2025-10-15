@@ -1,29 +1,29 @@
 import { useState, useEffect } from 'react';
 import { Filter, X } from 'lucide-react';
+import { productService } from '../../services/productService';
+import { extractPageContent, extractPaginationInfo } from '../../utils/helpers';
 
 const ProductFilters = ({ onFilterChange, categories }) => {
   const [filters, setFilters] = useState({
-    categoryId: '',
+    categoryIds: [],
     minPrice: '',
     maxPrice: '',
-    manufacturerIds: [], // ← Змінено на масив
+    manufacturerIds: [],
     inStock: false,
   });
 
   const [manufacturers, setManufacturers] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
 
-  // Завантаження виробників
   useEffect(() => {
     loadManufacturers();
   }, []);
 
   const loadManufacturers = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/v1/manufacturers');
-      const data = await response.json();
-      setManufacturers(data);
-    } catch (error) {
+          const data = await productService.getManufacturers();
+          setManufacturers(extractPageContent(data));
+        } catch (error) {
       console.error('Failed to load manufacturers:', error);
 
       setManufacturers([
