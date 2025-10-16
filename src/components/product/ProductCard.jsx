@@ -44,14 +44,14 @@ const ProductCard = ({ product }) => {
   return (
     <div
       onClick={handleCardClick}
-      className="card overflow-hidden cursor-pointer group"
+      className="card object-contain cursor-pointer group"
     >
       {/* Image */}
       <div className="relative overflow-hidden">
         <img
           src={product.imageUrl || '/api/placeholder/400/300'}
           alt={product.name}
-          className="w-full h-48 object-cover group-hover:scale-110 transition duration-300"
+          className="w-full h-48 object-contain group-hover:scale-110 transition duration-300"
         />
         
         {/* Wishlist Button */}
@@ -86,7 +86,7 @@ const ProductCard = ({ product }) => {
       <div className="p-4">
         {/* Category */}
         <p className="text-sm text-gray-500 mb-1">
-          {product.category?.name || 'Техніка'}
+          {product.Category?.name || 'Техніка'}
         </p>
 
         {/* Title */}

@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { authService } from '../services/authService';
 
 export const AuthContext = createContext(null);
@@ -6,38 +6,45 @@ export const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   useEffect(() => {
-    const loadUser = async () => {
-      if (authService.isAuthenticated()) {
-        try {
-          const userData = await authService.getCurrentUser();
-          setUser(userData);
-        } catch (error) {
-          console.error('Failed to load user:', error);
-          authService.logout();
-        }
+    const loadUserOnStartup = async () => {
+      try {
+        await authService.refreshAccessToken();
+        const response = await authService.getCurrentUser();
+        setUser(response.data); 
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-
-    loadUser();
+    loadUserOnStartup();
   }, []);
 
+  const openAuthModal = () => setIsAuthModalOpen(true);
+  const closeAuthModal = () => setIsAuthModalOpen(false);
+
   const login = async (email, password) => {
-    const data = await authService.login(email, password);
-    const userData = await authService.getCurrentUser();
-    setUser(userData);
-    return userData;
+    const response = await authService.login(email, password);
+    setUser(response.user); 
+    closeAuthModal();
+    return response.user;
+  };
+
+  const logout = async () => {
+    await authService.logout();
+    setUser(null);
   };
 
   const register = async (userData) => {
-    return await authService.register(userData);
-  };
-
-  const logout = () => {
-    authService.logout();
-    setUser(null);
+    await authService.register(userData);
+    const response = await authService.getCurrentUser();
+    setUser(response.data); 
+    closeAuthModal();
+    return response.data;
   };
 
   const value = {
@@ -47,7 +54,14 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     isAuthenticated: !!user,
+    isAuthModalOpen,
+    openAuthModal,
+    closeAuthModal,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};
+
+export const useAuth = () => {
+    return useContext(AuthContext);
 };

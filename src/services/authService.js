@@ -1,39 +1,50 @@
-import api from './api';
+import api from '../api/axios';
+
+let accessToken = null;
 
 export const authService = {
-  async login(email, password) {
-    const response = await api.post('/auth/login', { email, password });
-    if (response.data.token) {
-      localStorage.setItem('authToken', response.data.token);
-      localStorage.setItem('userRole', response.data.role);
-    }
-    return response.data;
-  },
+    async login(email, password) {
+        const response = await api.post('/auth/login', { email, password });
 
-  async register(userData) {
-    const response = await api.post('/auth/register', userData);
-    return response.data;
-  },
+        if (response.data.accessToken) {
+            accessToken = response.data.accessToken;
+        }
+        return response.data;
+    },
 
-  async getCurrentUser() {
-    const response = await api.get('/users/me');
-    return response.data;
-  },
+    async register(userData) {
+        const response = await api.post('/auth/register', userData);
+        if (response.data.accessToken) {
+            accessToken = response.data.accessToken;
+        }
+        return response.data;
+    },
 
-  logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
-  },
+    async logout() {
+        await api.post('/auth/logout');
+        accessToken = null;
+    },
 
-  getToken() {
-    return localStorage.getItem('authToken');
-  },
+    async getCurrentUser() {
+        return api.get('/users/me');
+    },
 
-  getRole() {
-    return localStorage.getItem('userRole');
-  },
+    async refreshAccessToken() {
+        try {
+            const response = await api.post('/auth/refresh');
+            accessToken = response.data.accessToken;
+            return accessToken;
+        } catch (error) {
+            accessToken = null;
+            throw error;
+        }
+    },
 
-  isAuthenticated() {
-    return !!this.getToken();
-  },
+    getAccessToken() {
+        return accessToken;
+    },
+
+    isAuthenticated() {
+        return !!accessToken;
+    },
 };

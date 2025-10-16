@@ -30,21 +30,18 @@ const AuthModal = ({ isOpen, onClose }) => {
     try {
       if (isLoginMode) {
         await login(formData.email, formData.password);
-        onClose();
       } else {
         await register({
           name: formData.name,
           email: formData.email,
           password: formData.password,
         });
-        setIsLoginMode(true);
-        setError('');
-        alert('Реєстрація успішна! Тепер увійдіть в систему.');
       }
+      onClose(); // закриваю вікно в обох випадках
     } catch (err) {
       setError(
         err.response?.data?.message ||
-        (isLoginMode ? 'Невірний email або пароль' : 'Помилка реєстрації')
+        (isLoginMode ? 'Невірний email або пароль' : 'Помилка реєстрації. Можливо, такий email вже існує.')
       );
     } finally {
       setLoading(false);
@@ -106,7 +103,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               value={formData.password}
               onChange={handleChange}
               className="input-field"
-              minLength="6"
+              minLength="8"
               required
             />
           </div>

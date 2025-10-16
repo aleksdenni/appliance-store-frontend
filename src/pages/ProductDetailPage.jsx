@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate} from 'react-router-dom'; 
 import { ChevronLeft, Star, ShoppingCart, Heart, Package, Shield, Truck } from 'lucide-react';
 import { productService } from '../services/productService';
 import { useAuth } from '../hooks/useAuth';
@@ -14,9 +14,9 @@ const ProductDetailPage = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const { addToCart } = useCart();
-  
+
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -60,7 +60,7 @@ const ProductDetailPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      {/* Back Button */}
+      {/* ... (код до блоку з кнопкою "Додати в кошик" без змін) ... */}
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-gray-600 hover:text-black mb-6"
@@ -170,7 +170,8 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            {/* Quantity and Add to Cart */}
+
+            {/* Quantity and Add to Cart for LOGGED-IN CLIENTS */}
             {user && user.role === USER_ROLES.CLIENT && product.stockQuantity > 0 && (
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -203,6 +204,22 @@ const ProductDetailPage = () => {
                 </button>
               </div>
             )}
+
+            {/* Блок-попередження для НЕзалогінених користувачів */}
+            {!user && product.stockQuantity > 0 && (
+              <div className="bg-blue-50 border-l-4 border-blue-500 text-blue-800 p-4 rounded-md">
+                <p className="text-sm">
+                  Щоб додати товар у кошик, будь ласка,{' '}
+                  <button
+                    onClick={openAuthModal}
+                    className="font-bold hover:underline text-blue-600 bg-transparent border-none p-0 cursor-pointer"
+                  >
+                    увійдіть в акаунт
+                  </button>.
+                </p>
+              </div>
+            )}
+
 
             {/* Features */}
             <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t">

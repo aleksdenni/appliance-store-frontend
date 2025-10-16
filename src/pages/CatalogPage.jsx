@@ -15,7 +15,7 @@ const CatalogPage = () => {
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('priceLowToHigh');
   const [showFilters, setShowFilters] = useState(true);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [pagination, setPagination] = useState({
     page: 0,
@@ -25,12 +25,22 @@ const CatalogPage = () => {
   });
 
   const [filters, setFilters] = useState({
-    categoryIds: [],
+    categoryId: '',
     minPrice: '',
     maxPrice: '',
     manufacturerIds: [],
     inStock: false,
   });
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get('category');
+    if (categoryFromUrl) {
+      setFilters(prev => ({
+        ...prev,
+        categoryId: categoryFromUrl
+      }));
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     loadCategories();
@@ -58,21 +68,42 @@ const CatalogPage = () => {
         page: pagination.page,
         size: pagination.size,
         sort: getSortParam(sortBy),
-        search: searchParams.get('search') || '',
-        categoryId: filters.categoryIds || searchParams.get('category') || '',
-        minPrice: filters.minPrice,
-        maxPrice: filters.maxPrice,
-        ...(filters.manufacturerIds.length > 0 && {
-          manufacturerIds: filters.manufacturerIds
-        }),
-        inStock: filters.inStock,
       };
 
-      Object.keys(params).forEach(key => {
-        if (params[key] === '' || params[key] === false) {
-          delete params[key];
-        }
-      });
+      // пошук якщо є
+      const searchQuery = searchParams.get('search');
+      if (searchQuery) {
+        params.search = searchQuery;
+      }
+
+      // Перевіряємо categoryId з фільтрів або з URL
+      // з юрл краще не перевіряти :)
+      if (filters.categoryId) {
+        params.categoryId = parseInt(filters.categoryId);
+      }
+
+      // ціновий діапазон
+      if (filters.minPrice) {
+        params.minPrice = parseInt(filters.minPrice);
+      }
+      if (filters.maxPrice) {
+        params.maxPrice = parseInt(filters.maxPrice);
+      }
+
+      // виробників
+      if (filters.manufacturerIds && filters.manufacturerIds.length > 0) {
+        params.manufacturerIds = filters.manufacturerIds;
+      }
+
+      // фільтр наявності
+      if (filters.inStock === true) {
+        params.inStock = true;
+      }
+
+      console.log('=== ДІАГНОСТИКА ФІЛЬТРІВ ===');
+      console.log('filters.categoryId:', filters.categoryId);
+      console.log('type of categoryId:', typeof filters.categoryId);
+      console.log('searchParams category:', searchParams.get('category'));
 
       console.log('API Request params:', params); // Для діагностики
       console.log('📤 Sending API Request:');
@@ -90,7 +121,6 @@ const CatalogPage = () => {
 
       setProducts(extractPageContent(data));
       const paginationInfo = extractPaginationInfo(data);
-      // Повністю оновлюємо стан пагінації на основі відповіді API
       setPagination({
         page: paginationInfo.currentPage,
         size: paginationInfo.pageSize,
@@ -114,11 +144,20 @@ const CatalogPage = () => {
     return sortMap[sortValue] || 'price,asc';
   };
 
-  const handleFilterChange = (newFilters) => {
-    console.log('Filters changed:', newFilters); // Для діагностики
-    setFilters(newFilters);
-    setPagination(prev => ({ ...prev, page: 0 }));
-  };
+const handleFilterChange = (newFilters) => {
+  setFilters(newFilters);
+  setPagination(prev => ({ ...prev, page: 0 }));
+
+  // Оновлюємо URL, щоб він відповідав фільтрам
+  const newSearchParams = new URLSearchParams(searchParams);
+  if (newFilters.categoryId) {
+    newSearchParams.set('category', newFilters.categoryId);
+  } else {
+    newSearchParams.delete('category'); // Видаляємо параметр, якщо категорію скинуто
+  }
+  // { replace: true } запобігає створенню зайвих записів в історії браузера
+  setSearchParams(newSearchParams, { replace: true });
+};
 
   const handlePageChange = (newPage) => {
     setPagination(prev => ({ ...prev, page: newPage }));
@@ -192,6 +231,7 @@ const CatalogPage = () => {
         {showFilters && (
           <aside className="lg:w-64 flex-shrink-0">
             <ProductFilters
+              filters={filters}
               onFilterChange={handleFilterChange}
               categories={categories}
             />

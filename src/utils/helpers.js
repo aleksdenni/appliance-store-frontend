@@ -40,7 +40,7 @@ export const extractPaginationInfo = (data) => {
       totalPages: data.totalPages || 1,
       totalElements: data.totalElements || 0,
       currentPage: data.number || 0,
-      pageSize: data.size || 10,
+      pageSize: data.size || 12,
       hasNext: !data.last,
       hasPrevious: !data.first,
     };

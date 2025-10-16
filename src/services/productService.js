@@ -1,8 +1,29 @@
-import api from './api';
+import api from '../api/axios';
+
+const hasActiveFilters = (filter) => {
+  if (!filter) return false;
+  return (
+    (filter.search && filter.search.trim() !== '') ||
+    filter.categoryId != null ||
+    filter.minPrice != null ||
+    filter.maxPrice != null ||
+    filter.inStock != null ||
+    (filter.manufacturerIds && filter.manufacturerIds.length > 0)
+  );
+};
 
 export const productService = {
-  async getAll(params = {}) {
-    const response = await api.get('/appliances', { params });
+  async getAll(params) {
+    const useFilterEndpoint = hasActiveFilters(params);
+    const url = useFilterEndpoint ? '/appliances/filter' : '/appliances';
+    const cleanedParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== null && value !== '' && !(Array.isArray(value) && value.length === 0)) {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+
+    const response = await api.get(url, { params: cleanedParams });
     return response.data;
   },
 

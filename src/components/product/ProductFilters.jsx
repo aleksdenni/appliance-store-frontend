@@ -3,17 +3,13 @@ import { Filter, X } from 'lucide-react';
 import { productService } from '../../services/productService';
 import { extractPageContent, extractPaginationInfo } from '../../utils/helpers';
 
-const ProductFilters = ({ onFilterChange, categories }) => {
-  const [filters, setFilters] = useState({
-    categoryIds: [],
-    minPrice: '',
-    maxPrice: '',
-    manufacturerIds: [],
-    inStock: false,
-  });
-
+// Компонент тепер отримує поточний стан фільтрів як пропс
+const ProductFilters = ({ filters, onFilterChange, categories }) => {
   const [manufacturers, setManufacturers] = useState([]);
   const [isOpen, setIsOpen] = useState(true);
+
+  // Видаляємо всі useEffect, що працювали з локальним станом filters
+  // і намагалися читати URL. Цим тепер керує CatalogPage.
 
   useEffect(() => {
     loadManufacturers();
@@ -21,51 +17,26 @@ const ProductFilters = ({ onFilterChange, categories }) => {
 
   const loadManufacturers = async () => {
     try {
-          const data = await productService.getManufacturers();
-          setManufacturers(extractPageContent(data));
-        } catch (error) {
+      const data = await productService.getManufacturers();
+      setManufacturers(extractPageContent(data));
+    } catch (error) {
       console.error('Failed to load manufacturers:', error);
-
+      // Залишаємо заглушку на випадок помилки
       setManufacturers([
-        { id: 1, name: 'Samsung' },
-        { id: 2, name: 'LG' },
-        { id: 3, name: 'Bosch' },
-        { id: 4, name: 'Philips' },
-        { id: 5, name: 'Siemens' },
-        { id: 6, name: 'Whirlpool' },
-        { id: 7, name: 'Gorenje' },
-        { id: 8, name: 'Panasonic' },
-        { id: 9, name: 'Sony' },
+        { id: 1, name: 'Samsung' }, { id: 2, name: 'LG' }, { id: 3, name: 'Bosch' },
+        { id: 4, name: 'Philips' }, { id: 5, name: 'Siemens' }, { id: 6, name: 'Whirlpool' },
+        { id: 7, name: 'Gorenje' }, { id: 8, name: 'Panasonic' }, { id: 9, name: 'Sony' },
         { id: 10, name: 'Dyson' },
       ]);
     }
   };
 
-  useEffect(() => {
-    onFilterChange(filters);
-  }, [filters]);
-
-  const handleChange = (key, value) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
-
-  const handleManufacturerToggle = (manufacturerId) => {
-    setFilters((prev) => {
-      const currentIds = prev.manufacturerIds;
-      const newIds = currentIds.includes(manufacturerId)
-        ? currentIds.filter(id => id !== manufacturerId)
-        : [...currentIds, manufacturerId];
-      
-      return { ...prev, manufacturerIds: newIds };
-    });
-  };
-
-  const handlePriceRangeClick = (min, max) => {
-    setFilters((prev) => ({ ...prev, minPrice: min, maxPrice: max }));
+const handleChange = (key, value) => {
+    onFilterChange({ ...filters, [key]: value });
   };
 
   const resetFilters = () => {
-    setFilters({
+    onFilterChange({
       categoryId: '',
       minPrice: '',
       maxPrice: '',
@@ -74,18 +45,30 @@ const ProductFilters = ({ onFilterChange, categories }) => {
     });
   };
 
+  const handleManufacturerToggle = (manufacturerId) => {
+    const currentIds = filters.manufacturerIds || [];
+    const newIds = currentIds.includes(manufacturerId)
+      ? currentIds.filter((id) => id !== manufacturerId)
+      : [...currentIds, manufacturerId];
+    onFilterChange({ ...filters, manufacturerIds: newIds });
+  };
+  
+  const handlePriceRangeClick = (min, max) => {
+    onFilterChange({ ...filters, minPrice: min, maxPrice: max });
+  };
+
   const priceRanges = [
     { label: 'До 1000 грн', min: 0, max: 1000 },
     { label: '1000 - 3000 грн', min: 100, max: 3000 },
     { label: '3000 - 5000 грн', min: 3000, max: 5000 },
     { label: '5000 - 15000 грн', min: 5000, max: 15000 },
     { label: '15000 - 25000 грн', min: 15000, max: 25000 },
-    { label: 'Більше 25000 грн', min: 25000, max: 35000 },
+    { label: 'Більше 25000 грн', min: 25000, max: '' },
   ];
 
-  return (
+ return (
     <div className="bg-white rounded-lg shadow-md p-4 sticky top-20">
-      {/* Header */}
+      {/* ... JSX заголовок ... */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center gap-2">
           <Filter size={20} />
@@ -98,12 +81,12 @@ const ProductFilters = ({ onFilterChange, categories }) => {
           {isOpen ? <X size={20} /> : <Filter size={20} />}
         </button>
       </div>
-
-      {/* Filters Content */}
+      
       <div className={`space-y-6 ${isOpen ? 'block' : 'hidden lg:block'}`}>
         {/* Category Filter */}
         <div>
           <label className="block text-sm font-medium mb-2">Категорія</label>
+          {/* value береться з пропсів */}
           <select
             value={filters.categoryId}
             onChange={(e) => handleChange('categoryId', e.target.value)}
@@ -118,6 +101,7 @@ const ProductFilters = ({ onFilterChange, categories }) => {
           </select>
         </div>
 
+        {/* ... решта JSX без змін, оскільки він вже використовує filters з пропсів ... */}
         {/* Price Range */}
         <div>
           <label className="block text-sm font-medium mb-2">Ціна</label>

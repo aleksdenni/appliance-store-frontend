@@ -1,5 +1,4 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './hooks/useAuth';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import Loading from './components/common/Loading';
@@ -9,11 +8,14 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import ClientDashboard from './pages/ClientDashboard';
 import AdminPanel from './pages/AdminPanel';
 import { ROUTES, USER_ROLES } from './utils/constants';
+import { useAuth } from './hooks/useAuth'; 
+import AuthModal from './components/auth/AuthModal';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
 
+  // перевірка покаже спіннер, поки йде перевірка юзера.
   if (loading) return <Loading />;
   
   if (!user) return <Navigate to={ROUTES.HOME} />;
@@ -26,17 +28,15 @@ const ProtectedRoute = ({ children, roles }) => {
 };
 
 function App() {
-  const { loading } = useAuth();
+  const { isAuthModalOpen, closeAuthModal } = useAuth();
 
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
         <Routes>
+
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.CATALOG} element={<CatalogPage />} />
           <Route path={ROUTES.PRODUCT} element={<ProductDetailPage />} />
@@ -61,6 +61,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
+      <AuthModal isOpen={isAuthModalOpen} onClose={closeAuthModal} />
     </div>
   );
 }

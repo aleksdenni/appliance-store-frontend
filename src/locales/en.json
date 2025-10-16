@@ -18,7 +18,8 @@
     "support": "Support",
     "signIn": "Sign In",
     "cart": "Cart",
-    "search": "Search products..."
+    "search": "Search products...",
+    "signOut": "Sign Out"
   },
   "footer": {
     "company": "Company",
