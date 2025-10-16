@@ -13,10 +13,11 @@ export const AuthProvider = ({ children }) => {
     const loadUserOnStartup = async () => {
       try {
         await authService.refreshAccessToken();
-        const response = await authService.getCurrentUser();
-        setUser(response.data); 
+        const currentUser = await authService.getCurrentUser();
+        setUser(currentUser);
       } catch (error) {
         setUser(null);
+        console.error("Failed to refresh token or load user", error);
       } finally {
         setLoading(false);
       }

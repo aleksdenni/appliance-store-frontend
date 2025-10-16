@@ -33,9 +33,11 @@ export const authService = {
         try {
             const response = await api.post('/auth/refresh');
             accessToken = response.data.accessToken;
+            api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
             return accessToken;
         } catch (error) {
             accessToken = null;
+            delete api.defaults.headers.common['Authorization'];
             throw error;
         }
     },
